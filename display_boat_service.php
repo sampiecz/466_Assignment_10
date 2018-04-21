@@ -81,10 +81,10 @@ echo '<div width="100%">
             </tr>
 ';
  
-foreach( $allRequestedRows as $boat ):
-    foreach( $boat as $boatName):
-        echo '<tr><td>' . $boatName . '</td></tr>';
-    endforeach;
+    foreach( $allRequestedRows as $boat ):
+        foreach( $boat as $boatName):
+            echo '<tr><td>' . $boatName . '</td></tr>';
+        endforeach;
     endforeach;
 
     echo '

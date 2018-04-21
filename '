@@ -47,7 +47,7 @@
 ';
  
 foreach( $allrows as $row ):
-    echo '<option id="go" value="' . $row[LastName] . '" name="lastname">' . $row[LastName] . '</option>';
+    echo '<option value="' . $row[LastName] . '" name="' . $row[LastName] . '">' . $row[LastName] . '</option>';
 endforeach;
 
 echo '
@@ -62,45 +62,39 @@ echo '
 
 ';
 
-if($_SERVER['REQUEST_METHOD'] == 'POST')
-{
-    $thevar = trim($_POST["lastname"]);
+$newSql = "
+    SELECT ms.BoatName
+    FROM Owner o JOIN MarinaSlip ms ON o.OwnerNum = ms.OwnerNum
+    WHERE o.LastName = '" . trim($_POST["BoatName"]) . "' 
+    LIMIT 10;
+";
 
-    $newSql = "
-        SELECT ms.BoatName
-        FROM Owner o JOIN MarinaSlip ms ON o.OwnerNum = ms.OwnerNum
-        WHERE o.LastName = '" . $thevar . "' 
-        LIMIT 10;
-    ";
+$otherResult = $pdo->query($newSql);
+$allRequestedRows = $otherResult->fetchAll();
 
-    $otherResult = $pdo->query($newSql);
-    $allRequestedRows = $otherResult->fetchAll(PDO::FETCH_ASSOC);
+# Output table first
+echo '<div width="100%">
+        <table width="100%" border="50px" cellpadding="25%">
+            <tr>
+                <td>
+                    <div width="100%">
+                        <h2>The owner you requested has the following boats:</h2>
+                    </div>
+                </td>
+            </tr>
+';
+ 
+foreach( $allRequestedRows as $boat ):
+    foreach( $boat as $boatName):
+        echo '<tr><td>' . $boatName . '</td></tr>';
+    endforeach;
+    endforeach;
 
-    # Output table first
-    echo '<div width="100%">
-            <table width="100%" border="50px" cellpadding="25%">
-                <tr>
-                    <td>
-                        <div width="100%">
-                            <h2>The owner you requested has the following boats:</h2>
-                        </div>
-                    </td>
-                </tr>
+    echo '
+            </table>
+          </div>
+
     ';
-     
-    foreach( $allRequestedRows as $boat ):
-            foreach( $boat as $boatName):
-                echo '<tr><td>' . $boatName . '</td></tr>';
-            endforeach;
-        endforeach;
-
-        echo '
-                </table>
-              </div>
-
-        ';
-
-} 
 
 
 
