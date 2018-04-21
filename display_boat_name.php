@@ -1,3 +1,10 @@
+<!--|Name: Samuel Piecz       -->
+<!--|Section: 3               -->
+<!--|Instructor Name: Lehuta  -->
+<!--|TA Name:  Raj            -->
+<!--|Semester: Spring         -->
+<!--|Due Date: 4/20/18         -->
+
 <!-- Include header so I don't have to retype it every time -->
 <?php include 'header.html'; ?>
 
