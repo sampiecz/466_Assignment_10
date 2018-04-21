@@ -1,3 +1,5 @@
+
+
 <!-- Include header so I don't have to retype it every time -->
 <?php include 'header.html'; ?>
 
@@ -20,8 +22,7 @@
 ?>
 <!-- End Connect to the database -->
 
-<!-- Get all Boat names, owner first and last names, the marina name and the slipname of that boat -->
-<?php
+<!-- Get all Boat names, owner first and last names, the marina name and the slipname of that boat --> <?php
     
     # My query or sql statement 
     $sql = "
@@ -38,22 +39,22 @@
 
     # Output table first
     echo '<div width="100%">
-        <form action="/~z1732715/display_user_boats.php" method="post">
+        <form action="/~z1732715/display_user_boats.php" method="POST">
             <table width="100%" border="50px" cellpadding="25%">
                 <tr>
                     <td>
                         <h2>Please select the owner name you want to see service slips for</h2>
-                        <select>
+                        <select name="name">
 ';
  
 foreach( $allrows as $row ):
-    echo '<option id="go" value="' . $row[LastName] . '" name="lastname">' . $row[LastName] . '</option>';
+    echo '<option value="' . $row[LastName] . '" name="' . $row[LastName] . '" >' . $row[LastName] . '</option>';
 endforeach;
 
 echo '
                         </select>
-                        <input type="submit">
-                        <input type="reset">
+                        <input type="submit" value="submit">
+                        <input type="reset" value="reset">
                     </td>
                 <tr>
             </table>
@@ -64,13 +65,12 @@ echo '
 
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-    $thevar = trim($_POST["lastname"]);
+    $ownerName = trim($_POST['name'] ?? '');
 
     $newSql = "
         SELECT ms.BoatName
         FROM Owner o JOIN MarinaSlip ms ON o.OwnerNum = ms.OwnerNum
-        WHERE o.LastName = '" . $thevar . "' 
-        LIMIT 10;
+        WHERE o.LastName = '" . $ownerName . "' LIMIT 10;
     ";
 
     $otherResult = $pdo->query($newSql);

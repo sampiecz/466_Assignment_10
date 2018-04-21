@@ -43,9 +43,10 @@
                 <tr>
                     <td>
                         <h2>Please select the owner name you want to see service slips for</h2>
-                        <select>
+                        <select name="name">
 ';
  
+# Generate all options
 foreach( $allrows as $row ):
     echo '<option value="' . $row[SlipID] . '" name="' . $row[BoatName] . '">' . $row[BoatName] . '</option>';
 endforeach;
@@ -62,37 +63,43 @@ echo '
 
 ';
 
-$newSql = "
-    SELECT sr.Description FROM ServiceRequest sr, Owner o, MarinaSlip ms WHERE ms.SlipID = sr.SlipID AND ms.OwnerNum = o.OwnerNum GROUP BY sr.Description LIMIT 10;
-";
+# Check if user is posting form
+if($_SERVER['REQUEST_METHOD'] == 'POST')
+{
+    # Get the value the user posted
+    $realSlipID = trim($_POST['name']);
 
-$otherResult = $pdo->query($newSql);
-$allRequestedRows = $otherResult->fetchAll();
+    # Sql to query for row user requested
+    $newSql = "
+        SELECT sr.Description FROM ServiceRequest sr, Owner o, MarinaSlip ms WHERE sr.SlipID = '" . $realSlipID . "' AND ms.OwnerNum = o.OwnerNum GROUP BY sr.Description LIMIT 10;
+    ";
 
-# Output table first
-echo '<div width="100%">
-        <table width="100%" border="50px" cellpadding="25%">
-            <tr>
-                <td>
-                    <div width="100%">
-                        <h2>The owner you requested has the following boats:</h2>
-                    </div>
-                </td>
-            </tr>
-';
- 
-    foreach( $allRequestedRows as $boat ):
-        foreach( $boat as $boatName):
-            echo '<tr><td>' . $boatName . '</td></tr>';
-        endforeach;
-    endforeach;
+    $otherResult = $pdo->query($newSql);
+    $allRequestedRows = $otherResult->fetchAll();
 
-    echo '
-            </table>
-          </div>
-
+    # Output table first
+    echo '<div width="100%">
+            <table width="100%" border="50px" cellpadding="25%">
+                <tr>
+                    <td>
+                        <div width="100%">
+                            <h2>The owner you requested has the following boats:</h2>
+                        </div>
+                    </td>
+                </tr>
     ';
+     
+        # Display the queries
+        foreach( $allRequestedRows as $boat ):
+            echo '<tr><td>' . $boat["Description"] . '</td></tr>';
+        endforeach;
 
+        echo '
+                </table>
+              </div>
+
+        ';
+}
 
 
 ?>
