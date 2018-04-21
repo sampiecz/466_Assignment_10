@@ -2,7 +2,7 @@
 <?php include 'header.html'; ?>
 
 <?php
-    $pageName = "Display Boat Name";
+    $pageName = "Display Boat's Name";
      echo "<h1>$pageName</h1></center></td></tr></table></div>";
 ?>
 
@@ -38,7 +38,7 @@
 
     # Generate table row for every row in the result of my query
     foreach( $allrows as $row ):
-        echo "<tr><td><center>" . $row . "</center></td></tr>";
+        echo "<tr><td><center>$row</center></td></tr>";
     endforeach;
 
     # Close my html table as the query is done
