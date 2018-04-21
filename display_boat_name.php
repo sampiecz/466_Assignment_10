@@ -55,9 +55,11 @@
     foreach( $allrows as $row ):
         echo "<tr>";
         # Generate table data for each attribute's value in every row
-        foreach( $row as $col ):
-            echo "<td><center>" . $col . "</center></td>";
-        endforeach;
+            echo "<td><center>" . $row["BoatName"] . "</center></td>";
+            echo "<td><center>" . $row["LastName"] . "</center></td>";
+            echo "<td><center>" . $row["FirstName"] . "</center></td>";
+            echo "<td><center>" . $row["Name"] . "</center></td>";
+            echo "<td><center>" . $row["SlipNum"] . "</center></td>";
         echo "</tr>";
     endforeach;
 
