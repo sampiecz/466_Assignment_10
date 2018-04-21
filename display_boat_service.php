@@ -22,8 +22,11 @@
 
 <!-- Get all Boat names, owner first and last names, the marina name and the slipname of that boat -->
 <?php
+    
     # My query or sql statement 
-    $sql = "SELECT ms.BoatName, o.LastName, o.FirstName, m.Name, ms.SlipNum FROM Owner o JOIN MarinaSlip ms JOIN Marina m ON o.OwnerNum = ms.OwnerNum AND ms.MarinaNum = m.MarinaNum ORDER BY ms.BoatName, m.Name LIMIT 10;";
+    $sql = "
+       SELECT LastName FROM Owner LIMIT 10; 
+    ";
 
     # The resutlt of passing that query to the db
     $result = $pdo->query($sql);
@@ -32,27 +35,68 @@
 
     # The result of all the rows of that query
     $allrows = $result->fetchAll();
-    
-    # Output table first
-    echo '<div width="100%"><table width="100%" border="50px" cellpadding="25%">';
 
-    # Generate table row for every row in the result of my query
+    # Output table first
+    echo '<div width="100%">
+            <form action="" method="GET">
+                <table width="100%" border="50px" cellpadding="25%">
+                    <tr>
+                        <td>
+                            <h2>Please select the owner name you want to see service slips for</h2>
+                            <select>
+    ';
+     
     foreach( $allrows as $row ):
-        echo "<tr>";
-        # Generate table data for each attribute's value in every row
-        foreach( $row as $col ):
-            echo "<td><center>" . $col . "</center></td>";
-        echo "</tr>";
-        endforeach;
+        echo '<option value="' . $row[LastName] . '" name="' . $row[LastName] . '">' . $row[LastName] . '</option>';
     endforeach;
 
-    # Close my html table as the query is done
-    echo "</table></div>";
+    echo '
+                            </select>
+                            <input type="submit">
+                        </td>
+                    <tr>
+                </table>
+            </form>
+          </div>
+
+    ';
+
+    $newSql = "
+        SELECT ms.BoatName
+        FROM Owner o JOIN MarinaSlip ms ON o.OwnerNum = ms.OwnerNum
+        WHERE o.LastName = 'Adney' 
+        LIMIT 10;
+    ";
+
+    $otherResult = $pdo->query($newsql);
+    $allRequestedRows = $otherResult->fetchAll();
+
+    # Output table first
+    echo '<div width="100%">
+            <table width="100%" border="50px" cellpadding="25%">
+                <tr>
+                    <td>
+                        <h2>The owner you requested has the following boats:</h2>
+                    </td>
+                </tr>
+                <tr>
+    ';
+     
+    foreach( $result as $row ):
+        echo '<td>' . $row . '</td>';
+    endforeach;
+
+    echo '
+                <tr>
+            </table>
+          </div>
+
+    ';
+
+
 
 ?>
-<!-- End DB query and html table -->
 
 
 <!-- Inlude the footer so I don't have to retype it every time -->
 <?php include 'footer.html'; ?>
-

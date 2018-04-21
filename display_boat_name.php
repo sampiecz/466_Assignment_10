@@ -23,7 +23,12 @@
 <!-- Get all Boat names, owner first and last names, the marina name and the slipname of that boat -->
 <?php
     # My query or sql statement 
-    $sql = "SELECT * FROM MarinaSlip;"; 
+    $sql = "
+        SELECT ms.BoatName, o.LastName, o.FirstName, m.Name, ms.SlipNum 
+        FROM Owner o JOIN MarinaSlip ms JOIN Marina m ON o.OwnerNum = ms.OwnerNum AND ms.MarinaNum = m.MarinaNum
+        ORDER BY ms.BoatName, m.Name LIMIT 10;
+    ";
+
 
     # The resutlt of passing that query to the db
     $result = $pdo->query($sql);
@@ -34,15 +39,31 @@
     $allrows = $result->fetchAll();
     
     # Output table first
-    echo '<div width="100%"><table width="100%" border="50px" cellpadding="25%">';
+    echo '<div width="100%">
+            <table width="100%" border="50px" cellpadding="25%">
+                <tr>
+                    <th>Boat Name</th>
+                    <th>Owner Last Name</th>
+                    <th>Owner First Name</th>
+                    <th>Marina Name</th>
+                    <th>Marina Slip #</th>
+                <tr>
+    ';
+
 
     # Generate table row for every row in the result of my query
     foreach( $allrows as $row ):
-        echo "<tr><td><center>$row</center></td></tr>";
+        echo "<tr>";
+        # Generate table data for each attribute's value in every row
+        foreach( $row as $col ):
+            echo "<td><center>" . $col . "</center></td>";
+        endforeach;
+        echo "</tr>";
     endforeach;
 
     # Close my html table as the query is done
     echo "</table></div>";
+
 ?>
 <!-- End DB query and html table -->
 
